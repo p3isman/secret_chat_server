@@ -1,13 +1,13 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import Router from './routes/Router';
+import router from './routes/router';
 import {
   addUser,
   removeUser,
   getUser,
   getUsersInRoom
-} from './controllers/UsersController';
+} from './services/usersService';
 
 const PORT = process.env.PORT || 8080;
 
@@ -19,7 +19,7 @@ const io = new Server(httpServer, {
   }
 });
 
-app.use(Router);
+app.use(router);
 
 io.on('connection', socket => {
   // User joins the room
