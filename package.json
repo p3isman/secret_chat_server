@@ -1,7 +1,7 @@
 {
   "name": "chat-app-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "An Express server for a live chat application.",
   "main": "index.js",
   "scripts": {
     "start": "node ./dist/index.js",
