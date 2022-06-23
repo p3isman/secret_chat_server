@@ -1,8 +1,4 @@
-interface User {
-  id: string;
-  name: string;
-  room: string;
-}
+import { User } from '../types';
 
 const users: User[] = [];
 
