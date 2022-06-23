@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node src/index.ts",
-    "dev": "nodemon src/index.ts",
+    "start": "node ./build/index.js",
+    "dev": "nodemon ./src/index.ts",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,14 +18,8 @@
     "socket.io": "^4.5.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.5",
-    "@babel/node": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-typescript": "^7.17.12",
     "@types/express": "^4.17.13",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
-  },
-  "type": "module"
+  }
 }
