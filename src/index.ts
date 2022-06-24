@@ -6,7 +6,7 @@ import {
   addUser,
   removeUser,
   getUser,
-  getUsersInRoom
+  getUsersInRoom,
 } from './services/usersService';
 
 const PORT = process.env.PORT || 8080;
@@ -15,37 +15,36 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000'
-  }
+    origin: 'http://localhost:3000',
+  },
 });
 
 app.use(router);
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   // User joins the room
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
 
     if (error) return callback(error);
-
-    console.log(user);
+    if (user === undefined) return callback('Error entering the room.');
 
     // Join current user to the room
-    socket.join(user!.room);
+    socket.join(user.room);
 
     socket.emit('message', {
       user: 'Admin',
-      text: `Welcome to the room, ${user!.name}!`
+      text: `Welcome to the room, ${user.name}!`,
     });
 
-    socket.broadcast.to(user!.room).emit('message', {
+    socket.broadcast.to(user.room).emit('message', {
       user: 'Admin',
-      text: `${user!.name} has joined the chat!`
+      text: `${user.name} has joined the chat!`,
     });
 
-    io.to(user!.room).emit('roomData', {
-      room: user!.room,
-      users: getUsersInRoom(user!.room)
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
     });
   });
 
@@ -53,10 +52,12 @@ io.on('connection', socket => {
   socket.on('sendMessage', (message: string, callback) => {
     const user = getUser(socket.id);
 
-    io.to(user!.room).emit('message', { user: user!.name, text: message });
-    io.to(user!.room).emit('roomData', {
-      room: user!.room,
-      users: getUsersInRoom(user!.room)
+    if (user === undefined) return;
+
+    io.to(user.room).emit('message', { user: user.name, text: message });
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
     });
 
     callback();
@@ -69,12 +70,10 @@ io.on('connection', socket => {
     if (user) {
       io.to(user.room).emit('message', {
         user: 'Admin',
-        text: `${socket.id} has disconnected.`
+        text: `${socket.id} has disconnected.`,
       });
     }
   });
 });
 
-httpServer.listen(PORT, () => {
-  console.log('Listening on port ' + PORT);
-});
+httpServer.listen(PORT);
