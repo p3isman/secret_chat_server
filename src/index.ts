@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
     if (user) {
       io.to(user.room).emit('message', {
         user: 'Admin',
-        text: `${socket.id} has disconnected.`,
+        text: `${user.name} has disconnected.`,
       });
     }
   });
