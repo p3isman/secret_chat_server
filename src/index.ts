@@ -15,7 +15,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'https://live-chat-p3isman.netlify.app/'],
+    origin: '*',
   },
 });
 
