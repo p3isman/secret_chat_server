@@ -8,11 +8,11 @@ interface AddUserResponse {
 }
 
 export const addUser = ({ id, name, room }: User): AddUserResponse => {
-  room = room.trim();
-  name = name.trim();
+  const roomTrimmed = room.trim();
+  const nameTrimmed = name.trim();
 
   const existingUser = users.find(
-    (user) => user.room === room && user.name === name,
+    (user) => user.room === roomTrimmed && user.name === nameTrimmed,
   );
 
   if (existingUser) {
@@ -21,7 +21,7 @@ export const addUser = ({ id, name, room }: User): AddUserResponse => {
     };
   }
 
-  const user = { id, name, room };
+  const user = { id, name: nameTrimmed, room: roomTrimmed };
   users.push(user);
 
   return { user };
