@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import router from './routes/routers';
+import router from './routes/router';
 import {
   addUser,
   removeUser,
