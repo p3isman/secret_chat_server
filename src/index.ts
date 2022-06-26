@@ -72,6 +72,10 @@ io.on('connection', (socket) => {
         user: 'Admin',
         text: `${user.name} has disconnected.`,
       });
+
+      io.to(user.room).emit('roomData', {
+        users: getUsersInRoom(user.room),
+      });
     }
   });
 });
