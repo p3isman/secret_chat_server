@@ -33,12 +33,12 @@ io.on('connection', (socket) => {
     socket.join(user.room);
 
     socket.emit('message', {
-      user: 'Admin',
+      user: 'Chat Bot',
       text: `Welcome to the room, ${user.name}!`,
     });
 
     socket.broadcast.to(user.room).emit('message', {
-      user: 'Admin',
+      user: 'Chat Bot',
       text: `${user.name} has joined the chat!`,
     });
 
@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
 
     if (user) {
       io.to(user.room).emit('message', {
-        user: 'Admin',
+        user: 'Chat Bot',
         text: `${user.name} has disconnected.`,
       });
 
