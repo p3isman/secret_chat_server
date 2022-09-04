@@ -1,6 +1,8 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import router from './routes/router';
 import {
   addUser,
@@ -8,6 +10,7 @@ import {
   getUser,
   getUsersInRoom,
 } from './services/usersService';
+import { addMessage, getMessages } from './services/messagesService';
 
 const PORT = process.env.PORT || 8080;
 
@@ -32,6 +35,8 @@ io.on('connection', (socket) => {
     // Join current user to the room
     socket.join(user.room);
 
+    socket.emit('messages', getMessages(user.room));
+
     socket.emit('message', {
       user: 'Chat Bot',
       text: `Welcome to the room, ${user.name}!`,
@@ -49,12 +54,14 @@ io.on('connection', (socket) => {
   });
 
   // User sends a message
-  socket.on('sendMessage', (message: string, callback) => {
+  socket.on('sendMessage', (text: string, callback) => {
     const user = getUser(socket.id);
 
     if (user === undefined) return;
 
-    io.to(user.room).emit('message', { user: user.name, text: message });
+    addMessage(user.name, user.room, text);
+
+    io.to(user.room).emit('message', { user: user.name, text });
     io.to(user.room).emit('roomData', {
       room: user.room,
       users: getUsersInRoom(user.room),
